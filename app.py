@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 import pyodbc
 
 app = Flask(__name__)
+app.secret_key = "chave_secreta"
 
 def conectar():
     return pyodbc.connect(
@@ -35,7 +36,8 @@ def cadastro():
         conexao.commit()
         conexao.close()
 
-        return "Livro cadastrado com sucesso!"
+        flash("Livro cadastrado com sucesso!")
+        return redirect(url_for("cadastro"))
 
     return render_template("cadastrolivro.html")
 

@@ -4,6 +4,18 @@
 	<main>
 		<h1>CADASTRO DE LIVRO</h1>
 		<P>Livro</P>
+
+		<!-- 🔔 MENSAGEM DE SUCESSO -->
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+		    {% for msg in messages %}
+		      <p style="color: green; font-weight: bold;">
+		        {{ msg }}
+		      </p>
+		    {% endfor %}
+		  {% endif %}
+		{% endwith %}
+
 		<form method="POST">
 			<div>
 				<label for="tx-titulo-livro">Titulo do Livro:</label>
