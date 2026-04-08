@@ -39,5 +39,28 @@ def cadastro():
 
     return render_template("cadastrolivro.html")
 
+
+@app.route("/buscarlivro", methods=["GET"])
+def buscar():
+    
+    nomelivro = request.args.get("titulo-Livro", "")
+
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        SELECT nomeLivro, autorLivro, qtdEstoque,
+        CAST(precoLivro AS DECIMAL(10,2)) as preco
+        FROM tblLivros
+        WHERE nomeLivro LIKE ?
+    """, ('%' + nomelivro + '%',))
+
+    livros = cursor.fetchall()
+    conexao.close()
+
+    return render_template("buscarlivro.html", livros=livros)
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

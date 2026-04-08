@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+	<main>
+    <h1>BUSCAR LIVRO</h1>
+    <p>Livro</p>
+
+    <form method="GET" action="/buscarlivro">
+        <div>
+            <label for="tx-titulo-livro">Título do Livro:</label>
+            <input type="text" name="titulo-Livro" id="tx-titulo-livro" required>
+        </div>
+
+        <br>
+
+        <div>
+            <button type="submit">Buscar</button>
+        </div>
+    </form>
+
+    <hr>
+
+    {% if request.args.get("titulo-Livro") %}
+        
+        {% if livros %}
+            <h2>Resultados:</h2>
+
+            <table border="1">
+                <tr>
+                    <th>Nome</th>
+                    <th>Autor</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                </tr>
+
+                {% for livro in livros %}
+                <tr>
+                    <td>{{ livro.nomeLivro }}</td>
+                    <td>{{ livro.autorLivro }}</td>
+                    <td>{{ livro.qtdEstoque }}</td>
+                    <td>R$ {{ livro.preco }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        {% else %}
+            <p>Nenhum livro encontrado.</p>
+        {% endif %}
+
+    {% endif %}
+</main>
+{% endblock %}
