@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-	<main>
-    <h1>BUSCAR LIVRO</h1>
-    <p>Livro</p>
+<main>
+    <h1>Buscar Livro</h1>
 
-    <form method="GET" action="/buscarlivro">
+    <form method="GET" action="{{ url_for('buscar') }}">
         <div>
-            <label for="tx-titulo-livro">Título do Livro:</label>
-            <input type="text" name="titulo-Livro" id="tx-titulo-livro" required>
+            <label for="titulo">Título do Livro:</label>
+            <input 
+                type="text" 
+                name="titulo_livro" 
+                id="titulo">
         </div>
 
         <br>
@@ -20,13 +22,14 @@
 
     <hr>
 
-    {% if request.args.get("titulo-Livro") %}
+    {% if request.args.get("titulo_livro") %}
         
         {% if livros %}
             <h2>Resultados:</h2>
 
             <table border="1">
                 <tr>
+                    <th>ID</th>
                     <th>Nome</th>
                     <th>Autor</th>
                     <th>Quantidade</th>
@@ -35,10 +38,11 @@
 
                 {% for livro in livros %}
                 <tr>
-                    <td>{{ livro.nomeLivro }}</td>
-                    <td>{{ livro.autorLivro }}</td>
-                    <td>{{ livro.qtdEstoque }}</td>
-                    <td>R$ {{ livro.preco }}</td>
+                    <td>{{ livro[0] }}</td>
+                    <td>{{ livro[1] }}</td>
+                    <td>{{ livro[2] }}</td>
+                    <td>{{ livro[3] }}</td>
+                    <td>R$ {{ livro[4] }}</td>
                 </tr>
                 {% endfor %}
             </table>

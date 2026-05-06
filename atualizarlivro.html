@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+
+<h1>Livraria</h1>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <p style="color: green; font-weight: bold;">
+        {{ message }}
+      </p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- 🔍 BUSCA -->
+<form method="GET" action="{{ url_for('atualizarlivros') }}">
+    <input type="text" name="titulo_livro" placeholder="Buscar livro">
+    <button type="submit">Buscar</button>
+</form>
+
+<hr>
+
+{% if livros %}
+
+<table border="1">
+    <tr>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Quantidade</th>
+        <th>Preço</th>
+        <th>Ações</th>
+    </tr>
+
+    {% for livro in livros %}
+    <tr>
+        <td>{{ livro[1] }}</td>
+        <td>{{ livro[2] }}</td>
+        <td>{{ livro[3] }}</td>
+        <td>R$ {{ "%.2f"|format(livro[4]) }}</td>
+        <td>
+            <!-- ✔ EDITAR CORRIGIDO -->
+            <a href="{{ url_for('atualizarlivros', editar_id=livro[0]) }}">
+                Editar
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% elif ja_buscou %}
+<p>Nenhum livro encontrado.</p>
+{% endif %}
+
+<hr>
+
+{% if livro_editando %}
+
+<h2>Editar Livro</h2>
+
+<form method="POST" action="{{ url_for('atualizarlivros') }}">
+
+    <input type="hidden" name="id" value="{{ livro_editando[0] }}">
+
+    <label>Nome:</label>
+    <input type="text" name="nome" value="{{ livro_editando[1] }}">
+
+    <br><br>
+
+    <label>Autor:</label>
+    <input type="text" name="autor" value="{{ livro_editando[2] }}">
+
+    <br><br>
+
+    <label>Quantidade:</label>
+    <input type="number" name="quantidade" value="{{ livro_editando[3] }}">
+
+    <br><br>
+
+    <label>Preço:</label>
+    <input type="number" step="0.01" name="preco" value="{{ livro_editando[4] }}">
+
+    <br><br>
+
+    <button type="submit">Salvar</button>
+</form>
+
+{% endif %}
+
+{% endblock %}
