@@ -8,7 +8,7 @@ app.secret_key = "chave_secreta"
 def conectar():
     return pyodbc.connect(
         "DRIVER={ODBC Driver 17 for SQL Server};"
-        "SERVER=DESKTOP-BK1ILCS;"
+        "SERVER=ASUKA;"
         "DATABASE=Livraria;"
         "Trusted_Connection=yes;"
     )
@@ -69,8 +69,6 @@ def buscar():
 
 
 # ATUALIZAR LIVRO
-
-from flask import Flask, render_template, request, redirect, url_for, flash
 
 @app.route("/atualizar", methods=["GET", "POST"])
 def atualizarlivros():
@@ -140,6 +138,68 @@ def atualizarlivros():
         livro_editando=livro_editando,
         ja_buscou=ja_buscou
     )
+
+# APAGAR LIVRO
+
+@app.route("/apagarcadastro", methods=["GET"])
+def apagarcadastro():
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    livros = []
+    ja_buscou = False
+
+    titulo = request.args.get("titulo_livro")
+
+    if titulo:
+        cursor.execute("""
+            SELECT idLivro,
+                   nomeLivro,
+                   autorLivro,
+                   qtdEstoque,
+                   precoLivro
+            FROM tblLivros
+            WHERE nomeLivro LIKE ?
+        """, ('%' + titulo + '%',))
+
+        livros = cursor.fetchall()
+        ja_buscou = True
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "apagarcadastro.html",
+        livros=livros,
+        ja_buscou=ja_buscou
+    )
+
+
+@app.route("/apagar_livro/<int:id>")
+def apagar_livro(id):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "DELETE FROM tblLivros WHERE idLivro = ?",
+            (id,)
+        )
+
+        conn.commit()
+        flash("Livro apagado com sucesso!", "success")
+
+    except Exception as erro:
+        conn.rollback()
+        flash(f"Erro ao apagar livro: {erro}", "error")
+
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for("apagarcadastro"))
 
 # RODAR APP
 

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+
+<h1>Apagar Livro</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <p style="color: green; font-weight: bold;">
+                {{ message }}
+            </p>
+        {% endfor %}
+	{% endif %}
+{% endwith %}
+
+<form method="GET" action="{{ url_for('apagarcadastro') }}">
+    <input
+        type="text"
+        name="titulo_livro"
+        placeholder="Buscar Livro para Apagar"
+        required
+    >
+    <button type="submit">Buscar</button>
+</form>
+
+<hr>
+
+{% if livros %}
+
+<table border="1">
+    <tr>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Quantidade</th>
+        <th>Preço</th>
+        <th>Ação</th>
+    </tr>
+
+    {% for livro in livros %}
+    <tr>
+        <td>{{ livro[1] }}</td>
+        <td>{{ livro[2] }}</td>
+        <td>{{ livro[3] }}</td>
+        <td>R$ {{ "%.2f"|format(livro[4]) }}</td>
+        <td>
+            <a
+                href="{{ url_for('apagar_livro', id=livro[0]) }}"
+                onclick="return confirm('Tem certeza que deseja apagar este livro?');"
+            >
+                Apagar
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% elif ja_buscou %}
+<p>Nenhum livro encontrado.</p>
+{% endif %}
+
+{% endblock %}

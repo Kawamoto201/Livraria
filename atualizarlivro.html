@@ -2,7 +2,7 @@
 
 {% block conteudo %}
 
-<h1>Livraria</h1>
+<h1>Atualizar Livro</h1>
 
 {% with messages = get_flashed_messages(with_categories=True) %}
   {% if messages %}
@@ -14,13 +14,11 @@
   {% endif %}
 {% endwith %}
 
-<!-- 🔍 BUSCA -->
+<!-- BUSCA -->
 <form method="GET" action="{{ url_for('atualizarlivros') }}">
-    <input type="text" name="titulo_livro" placeholder="Buscar livro">
+    <input type="text" name="titulo_livro" placeholder="Buscar livro para Atualizar">
     <button type="submit">Buscar</button>
 </form>
-
-<hr>
 
 {% if livros %}
 
